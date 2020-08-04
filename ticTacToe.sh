@@ -1,4 +1,5 @@
-#!/bin/bash 
+#!/bin/bash
+
 #defining total length of grid
 GRID_LENGTH=9
 
@@ -6,27 +7,44 @@ GRID_LENGTH=9
 OPTION_VALUE1=1
 OPTION_VALUE0=0
 
+#array as playing board
+declare -a board
+
 #Function to print the board
 function printBoard(){
-   board=("$@")
-   echo "   ${board[0]} | ${board[1]} | ${board[2]}"
-   echo "   ========="
-   echo "   ${board[3]} | ${board[4]} | ${board[5]}"
-   echo "   ========="
-   echo "   ${board[6]} | ${board[7]} | ${board[8]}"
+	playBoard=("$@")
+	echo "   ${playBoard[0]} | ${playBoard[1]} | ${playBoard[2]}"
+	echo "   ========="
+	echo "   ${playBoard[3]} | ${playBoard[4]} | ${playBoard[5]}"
+	echo "   ========="
+	echo -e "   ${playBoard[6]} | ${playBoard[7]} | ${playBoard[8]} \n"
 }
 
 #function that resets the board
 function resetBoard(){
-	declare -a board
-
-	echo "New Board :"
+	echo "New Game :"
 	for (( i=1; i<=$GRID_LENGTH; i++))
 	do
 		board[i]="$i"
 	done
 
 	printBoard ${board[@]}
+}
+
+#function to check available valid cells
+function checkValidCell(){
+	board=("$@")
+
+	printf '%s ' "["
+	for  i in ${board[@]}
+	do
+		if [ "$i" == "x" ] || [ "$i" == "o" ]
+		then
+			continue
+		fi
+		printf '%s ' $i
+	done
+	echo "]"
 }
 
 #function to check right options-
@@ -76,13 +94,13 @@ echo "Toss result : $toss"
 
 if [[ $tossValue -eq $toss ]]
 then
-	echo -e "User wins the toss.\nUser will go first."
+	echo -e "User wins the toss.\nUser will go first. \n"
 	IFS="$(printf '\3')"
 	set -- $(chooseUserLetter)
 	userChoice=$1
 	computerChoice=$2
 else
-	echo -e "Computer wins the toss.\nComputer will go first"
+	echo -e "Computer wins the toss.\nComputer will go first \n"
 	IFS="$(printf '\3')"
    set -- $(chooseComputerLetter)
    userChoice=$1
@@ -99,4 +117,10 @@ else
 	computer="x"
 fi
 
-echo -e "User will play as $user. \nComputer will play as $computer "
+echo -e "User will play as $user. \nComputer will play as $computer. \n"
+
+echo -e "Game Started: \n"
+
+printf '%s ' "Available Valid Choices :"
+checkValidCell ${board[@]}
+
