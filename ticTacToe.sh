@@ -3,6 +3,10 @@
 #defining total length of grid
 GRID_LENGTH=9
 
+#Constants to compare and select toss and letter
+OPTION_VALUE1=1
+OPTION_VALUE0=0
+
 #Function to print the board
 function printBoard(){
    board=("$@")
@@ -28,3 +32,21 @@ function resetBoard(){
 
 echo "Welcome to the game of Tic Tac Toe!!"
 resetBoard
+
+read -p "Enter your toss choice between 0 and 1 : " tossValue
+
+#Asking right value required for toss until obtained
+while [ $tossValue -ne $OPTION_VALUE1 ] && [ $tossValue -ne $OPTION_VALUE0 ]
+do
+	read -p "Wrong input.Please enter 0 or 1 : " tossValue
+done
+
+toss=$((RANDOM % 2))
+echo "Toss result : $toss"
+
+if [ $tossValue -eq $toss ]
+then
+	echo -e "User wins the toss.\nUser will go first."
+else
+	echo -e "Computer wins the toss.\nComputer will go first"
+fi
