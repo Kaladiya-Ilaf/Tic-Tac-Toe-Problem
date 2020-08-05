@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #defining total length of grid
 GRID_LENGTH=9
 
@@ -16,6 +15,7 @@ declare -a board
 
 #Function to print the board
 function printBoard(){
+
 	playBoard=("$@")
 	echo "   ${playBoard[0]} | ${playBoard[1]} | ${playBoard[2]}"
 	echo "   ========="
@@ -27,7 +27,7 @@ function printBoard(){
 #function that resets the board
 function resetBoard(){
 	echo "New Game :"
-	for (( i=1; i<=$GRID_LENGTH; i++))
+	for (( i=0; i<$GRID_LENGTH; i++))
 	do
 		board[i]="$i"
 	done
@@ -39,7 +39,7 @@ function resetBoard(){
 function checkValidCell(){
 	board=("$@")
 	availableCells=()
-	occupiedCells=()
+
 	for  i in ${board[@]}
 	do
 		if [ "$i" == "$letterX" ] || [ "$i" == "$letterO" ]
@@ -87,6 +87,88 @@ function chooseComputerLetter(){
 	fi
 	printf '%d\3' "$userOption" "$computerOption"
 }
+function checkRowWin(){
+
+   rowBoard=("$@")
+
+   if [[ ${rowBoard[0]} == ${rowBoard[1]}  &&  ${rowBoard[1]} == ${rowBoard[2]} ]]
+   then
+      echo $OPTION_VALUE1
+   elif [[ ${rowBoard[3]} == ${rowBoard[4]}  &&  ${rowBoard[4]} == ${rowBoard[5]} ]]
+   then
+      echo $OPTION_VALUE1
+   elif [[ ${rowBoard[6]} == ${rowBoard[7]}  &&  ${rowBoard[7]} == ${rowBoard[8]} ]]
+   then
+      echo $OPTION_VALUE1
+   else
+      echo $OPTION_VALUE0
+	fi
+}
+
+function checkColumnWin(){
+	colBoard=("$@")
+
+   if [[ ${colBoard[0]} == ${colBoard[3]}  &&  ${colBoard[3]} == ${colBoard[6]} ]]
+   then
+      echo $OPTION_VALUE1
+   elif [[ ${colBoard[1]} == ${colBoard[4]}  &&  ${colBoard[4]} == ${colBoard[7]} ]]
+   then
+      echo $OPTION_VALUE1
+   elif [[ ${colBoard[2]} == ${colBoard[5]}  &&  ${colBoard[5]} == ${colBoard[8]} ]]
+   then
+      echo $OPTION_VALUE1
+   else
+      echo $OPTION_VALUE0
+   fi
+
+}
+
+function checkDiagonalWin(){
+	diagonalBoard=("$@")
+	if [[ ${diagonalBoard[0]} == ${diagonalBoard[4]}  &&  ${diogonalBoard[4]} == ${diagonalBoard[8]} ]]
+	then
+		echo $OPTION_VALUE1
+	elif [[ ${diagonalBoard[2]} == ${diagonalBoard[4]}  &&  ${diagonalBoard[4]} == ${diagonalBoard[6]} ]]
+	then
+		echo $OPTION_VALUE1
+	else
+		echo $OPTION_VALUE0
+	fi
+}
+
+function checkWin(){
+	boardToCheck=("$@")
+
+	rowWin=$(checkRowWin ${boardToCheck[@]})
+	columnWin=$(checkColumnWin ${boardToCheck[@]})
+	diagonalWin=$(checkDiagonalWin ${boardToCheck[@]})
+
+	if [[ $rowWin == $OPTION_VALUE1 ]] || [[ $columnWin == $OPTION_VALUE1 ]] || [[ $diagonalWin == $OPTION_VALUE1 ]]
+	then
+		echo >&2 "Win!"
+		echo $OPTION_VALUE1
+	else
+		echo $OPTION_VALUE0
+	fi
+}
+
+function play(){
+   echo  "Available Valid Choices :"
+   cellsAvailable=$(checkValidCell ${board[@]})
+   echo "Total cells available :" ${cellsAvailable}
+   printBoard ${board[@]}
+	
+	win=$(checkWin ${board[@]})
+	if [[ $win -eq $OPTION_VALUE0 ]] && [[ $cellsAvailable -eq $OPTIONVALUE0 ]]
+	then
+		echo  "Tie!"
+	elif [[ $win -eq $OPTION_VALUE0 ]] && [[ $cellsAvailable -ne $OPTIONVALUE0 ]]
+	then
+		echo "change Turn"
+	else
+		echo $win
+	fi
+}
 
 echo "Welcome to the game of Tic Tac Toe!!"
 resetBoard
@@ -125,7 +207,4 @@ echo -e "User will play as $user. \nComputer will play as $computer. \n"
 
 echo -e "Game Started: \n"
 
-echo  "Available Valid Choices :"
-cellsAvailable=$(checkValidCell ${board[@]})
-echo "Total cells available :" ${cellsAvailable}
-printBoard ${board[@]}
+play
