@@ -7,6 +7,10 @@ GRID_LENGTH=9
 OPTION_VALUE1=1
 OPTION_VALUE0=0
 
+#constants for letters
+letterX="x"
+letterO="o"
+
 #array as playing board
 declare -a board
 
@@ -34,17 +38,18 @@ function resetBoard(){
 #function to check available valid cells
 function checkValidCell(){
 	board=("$@")
-
-	printf '%s ' "["
+	availableCells=()
+	occupiedCells=()
 	for  i in ${board[@]}
 	do
-		if [ "$i" == "x" ] || [ "$i" == "o" ]
+		if [ "$i" == "$letterX" ] || [ "$i" == "$letterO" ]
 		then
 			continue
 		fi
-		printf '%s ' $i
+		availableCells+=($i)
 	done
-	echo "]"
+	echo >&2 ${availableCells[@]}
+	echo  ${#availableCells[@]}
 }
 
 #function to check right options-
@@ -110,17 +115,17 @@ fi
 #assigning letters to user and computer
 if [ $userChoice -eq $OPTION_VALUE1 ]
 then
-	user="x"
-	computer="o"
+	user=$letterX
+	computer=$letterO
 else
-	user="o"
-	computer="x"
+	user=$letterO
+	computer=$letterX
 fi
-
 echo -e "User will play as $user. \nComputer will play as $computer. \n"
 
 echo -e "Game Started: \n"
 
-printf '%s ' "Available Valid Choices :"
-checkValidCell ${board[@]}
-
+echo  "Available Valid Choices :"
+cellsAvailable=$(checkValidCell ${board[@]})
+echo "Total cells available :" ${cellsAvailable}
+printBoard ${board[@]}
