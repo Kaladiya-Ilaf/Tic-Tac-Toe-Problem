@@ -87,42 +87,42 @@ function chooseComputerLetter(){
 	fi
 	printf '%d\3' "$userOption" "$computerOption"
 }
+
+#check condition to win in rows
 function checkRowWin(){
-
-   rowBoard=("$@")
-
-   if [[ ${rowBoard[0]} == ${rowBoard[1]}  &&  ${rowBoard[1]} == ${rowBoard[2]} ]]
-   then
-      echo $OPTION_VALUE1
-   elif [[ ${rowBoard[3]} == ${rowBoard[4]}  &&  ${rowBoard[4]} == ${rowBoard[5]} ]]
-   then
-      echo $OPTION_VALUE1
-   elif [[ ${rowBoard[6]} == ${rowBoard[7]}  &&  ${rowBoard[7]} == ${rowBoard[8]} ]]
-   then
-      echo $OPTION_VALUE1
-   else
-      echo $OPTION_VALUE0
+	rowBoard=("$@")
+	if [[ ${rowBoard[0]} == ${rowBoard[1]}  &&  ${rowBoard[1]} == ${rowBoard[2]} ]]
+	then
+		echo $OPTION_VALUE1
+	elif [[ ${rowBoard[3]} == ${rowBoard[4]}  &&  ${rowBoard[4]} == ${rowBoard[5]} ]]
+	then
+		echo $OPTION_VALUE1
+	elif [[ ${rowBoard[6]} == ${rowBoard[7]}  &&  ${rowBoard[7]} == ${rowBoard[8]} ]]
+	then
+		echo $OPTION_VALUE1
+	else
+		echo $OPTION_VALUE0
 	fi
 }
 
+#check condition to win in column
 function checkColumnWin(){
 	colBoard=("$@")
-
-   if [[ ${colBoard[0]} == ${colBoard[3]}  &&  ${colBoard[3]} == ${colBoard[6]} ]]
-   then
-      echo $OPTION_VALUE1
-   elif [[ ${colBoard[1]} == ${colBoard[4]}  &&  ${colBoard[4]} == ${colBoard[7]} ]]
-   then
-      echo $OPTION_VALUE1
-   elif [[ ${colBoard[2]} == ${colBoard[5]}  &&  ${colBoard[5]} == ${colBoard[8]} ]]
-   then
-      echo $OPTION_VALUE1
-   else
-      echo $OPTION_VALUE0
-   fi
-
+	if [[ ${colBoard[0]} == ${colBoard[3]}  &&  ${colBoard[3]} == ${colBoard[6]} ]]
+	then
+		echo $OPTION_VALUE1
+	elif [[ ${colBoard[1]} == ${colBoard[4]}  &&  ${colBoard[4]} == ${colBoard[7]} ]]
+	then
+		echo $OPTION_VALUE1
+	elif [[ ${colBoard[2]} == ${colBoard[5]}  &&  ${colBoard[5]} == ${colBoard[8]} ]]
+	then
+		echo $OPTION_VALUE1
+	else
+		echo $OPTION_VALUE0
+	fi
 }
 
+#check condition to win in diagonal
 function checkDiagonalWin(){
 	diagonalBoard=("$@")
 	if [[ ${diagonalBoard[0]} == ${diagonalBoard[4]}  &&  ${diogonalBoard[4]} == ${diagonalBoard[8]} ]]
@@ -153,11 +153,11 @@ function checkWin(){
 }
 
 function play(){
-   echo  "Available Valid Choices :"
-   cellsAvailable=$(checkValidCell ${board[@]})
-   echo "Total cells available :" ${cellsAvailable}
-   printBoard ${board[@]}
-	
+	echo  "Available Valid Choices :"
+	cellsAvailable=$(checkValidCell ${board[@]})
+	echo "Total cells available :" ${cellsAvailable}
+	printBoard ${board[@]}
+
 	win=$(checkWin ${board[@]})
 	if [[ $win -eq $OPTION_VALUE0 ]] && [[ $cellsAvailable -eq $OPTIONVALUE0 ]]
 	then
