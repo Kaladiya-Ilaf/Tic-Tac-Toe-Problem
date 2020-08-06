@@ -191,8 +191,18 @@ function selectCorner(){
 			break
 		fi
 	done
+	echo $i
 }
 
+function selectCenter(){
+	if [[ "${board[4]}" == "$letterX" ]] || [[ "${board[4]}" == "$letterO" ]]
+	then
+		position=$(checkWinningPossibility $symbol)
+		WinGame=0
+		presentPlayer=$OPTION_VLAUE1
+	fi
+	echo 4
+}
 #function to determine action during computers turn
 function computerTurn(){
 	WinGame=0
@@ -206,8 +216,12 @@ function computerTurn(){
 	if [ $presentPlayer -eq $OPTION_VALUE0 ]
 	then
 		position=$(selectCorner)
-
 	fi
+	if [ $presentPlayer -eq $OPTION_VALUE0 ]
+   then
+      position=$(selectCenter)
+   fi
+
 	if [ $presentPlayer -eq $OPTION_VALUE0 ]
 	then
 		position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
