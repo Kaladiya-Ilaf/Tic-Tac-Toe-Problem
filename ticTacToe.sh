@@ -130,7 +130,7 @@ function checkWin(){
 	then
 		echo $OPTION_VALUE1
 	else
-		echo $OPTION_VALUE0 
+		echo $OPTION_VALUE0
 	fi
 }
 
@@ -165,10 +165,10 @@ function checkWinningPossibility(){
       	board[$i]=$currentSymbol
          WinGame=$(checkWin)
 		fi
-		if [[ $WinGame == 1 ]]
+		if [[ $WinGame == $OPTION_VALUE1 ]]
 		then
 			presentPlayer=$OPTION_VLAUE1
-			WinGame=0
+			WinGame=$OPTION_VALUE0
 			board[$i]=$i
 			break
 		fi
@@ -187,7 +187,7 @@ function selectCorner(){
 			continue
 		else
 			position=$(checkWinningPossibility $symbol)
-			WinGame=0
+			WinGame=$OPTION_VALUE0
 			presentPlayer=$OPTION_VLAUE1
 			break
 		fi
@@ -200,7 +200,7 @@ function selectCenter(){
 	if [[ "${board[4]}" == "$letterX" ]] || [[ "${board[4]}" == "$letterO" ]]
 	then
 		position=$(checkWinningPossibility $symbol)
-		WinGame=0
+		WinGame=$OPTION_VALUE0
 		presentPlayer=$OPTION_VLAUE1
 	fi
 	echo 4
