@@ -152,8 +152,8 @@ function checkCondition(){
 
 #function to check winning possiblity
 function checkWinningPossibility(){
+	currentSymbol=$1
 	i=0
-
 	while [ $i -lt $GRID_LENGTH ]
    do
 		if [[ "${board[$i]}" == "$letterX" ]] || [[ "${board[$i]}" == "$letterO" ]]
@@ -162,7 +162,7 @@ function checkWinningPossibility(){
 			presentPlayer=$OPTION_VALUE0
 			break
 		else
-      	board[$i]=$symbol
+      	board[$i]=$currentSymbol
          WinGame=$(checkWin)
 		fi
 		if [[ $WinGame == 1 ]]
@@ -170,7 +170,6 @@ function checkWinningPossibility(){
 			presentPlayer=$OPTION_VLAUE1
 			WinGame=0
 			board[$i]=$i
-			echo >&2 "Selected : $i"
 			break
 		fi
 
@@ -184,8 +183,12 @@ function checkWinningPossibility(){
 function computerTurn(){
 	WinGame=0
 	symbol=$1
-
-		position=$(checkWinningPossibility)
+	user=$userSymbol
+	position=$(checkWinningPossibility $symbol)
+	if [ $presentPlayer -eq $OPTION_VALUE0 ]
+	then
+		position=$(checkWinningPossibility $symbol)
+	fi
 	if [ $presentPlayer -eq $OPTION_VALUE0 ]
 	then
 		position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
@@ -235,7 +238,7 @@ function play(){
 
 		if [ $presentPlayer -eq $OPTION_VALUE0 ]
 		then
-			computerTurn $computerSymbol
+			computerTurn $computerSymbol $userSymbol
 			presentPlayer=$OPTION_VALUE1
 		else
 			userTurn $userSymbol
