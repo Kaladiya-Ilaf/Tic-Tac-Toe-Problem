@@ -178,6 +178,7 @@ function checkWinningPossibility(){
 	echo $i
 }
 
+#function to slect corners
 function selectCorner(){
 	for (( i=0; i<$GRID_LENGTH; i=$(( i + 2)) ))
 	do
@@ -194,6 +195,7 @@ function selectCorner(){
 	echo $i
 }
 
+#function to select center
 function selectCenter(){
 	if [[ "${board[4]}" == "$letterX" ]] || [[ "${board[4]}" == "$letterO" ]]
 	then
@@ -203,6 +205,19 @@ function selectCenter(){
 	fi
 	echo 4
 }
+
+#function to select random position
+function selectRandom(){
+	position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
+	while [ "${board[$position]}" == "$letterX" ] || [ "${board[$position]}" == "$letterO" ]
+	do
+		position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
+	done
+
+	presentPlayer=$OPTION_VLAUE1
+	echo $position
+}
+
 #function to determine action during computers turn
 function computerTurn(){
 	WinGame=0
@@ -224,12 +239,7 @@ function computerTurn(){
 
 	if [ $presentPlayer -eq $OPTION_VALUE0 ]
 	then
-		position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
-
-		while [ "${board[$position]}" == "$letterX" ] || [ "${board[$position]}" == "$letterO" ]
-		do
-			position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
-		done
+		position=$(selectRandom)
 	fi
 
 	board[$position]=$symbol
@@ -280,7 +290,7 @@ function play(){
 			checkCondition ${board[@]}
 
 		cellsAvailable=$(checkValidCell ${board[@]})
-		if [[ $cellsAvailable -eq $OPTION_VALUE0 ]]
+		if [[ $cellsAvailable -lt $OPTION_VALUE0 ]]
 		then
 			terminateGame=$OPTION_VALUE1
 			echo tie
