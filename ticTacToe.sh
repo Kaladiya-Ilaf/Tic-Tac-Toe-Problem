@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 #defining total length of grid
 GRID_LENGTH=9
@@ -178,6 +178,20 @@ function checkWinningPossibility(){
 	echo $i
 }
 
+function selectCorner(){
+	for (( i=0; i<$GRID_LENGTH; i=$(( i + 2)) ))
+	do
+		if [[ "${board[$i]}" == "$letterX" ]] || [[ "${board[$i]}" == "$letterO" ]] || [[ $i = 4 ]]
+		then
+			continue
+		else
+			position=$(checkWinningPossibility $symbol)
+			WinGame=0
+			presentPlayer=$OPTION_VLAUE1
+			break
+		fi
+	done
+}
 
 #function to determine action during computers turn
 function computerTurn(){
@@ -187,7 +201,12 @@ function computerTurn(){
 	position=$(checkWinningPossibility $symbol)
 	if [ $presentPlayer -eq $OPTION_VALUE0 ]
 	then
-		position=$(checkWinningPossibility $symbol)
+		position=$(checkWinningPossibility $user)
+	fi
+	if [ $presentPlayer -eq $OPTION_VALUE0 ]
+	then
+		position=$(selectCorner)
+
 	fi
 	if [ $presentPlayer -eq $OPTION_VALUE0 ]
 	then
