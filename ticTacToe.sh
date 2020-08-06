@@ -1,4 +1,5 @@
-#!/bin/bash 
+#!/bin/bash -x
+
 #defining total length of grid
 GRID_LENGTH=9
 
@@ -136,7 +137,7 @@ function checkWin(){
 #function to check win, tie or contiue playing option
 function checkCondition(){
 	win=$(checkWin)
-	if [[ $win -eq $OPTION_VALUE0 ]] && [[ $cellsAvailable -eq $OPTION_VALUE0 ]]
+	if [[ $win -eq $OPTION_VALUE0 ]] && [[ $cellsAvailable -lt $OPTION_VALUE0 ]]
 	then
 		terminateGame=$OPTION_VALUE0
 	elif [[ $win -eq $OPTION_VALUE0 ]] && [[ $cellsAvailable -ge $OPTION_VALUE0 ]]
@@ -149,17 +150,53 @@ function checkCondition(){
 	fi
 }
 
+#function to check winning possiblity
+function checkWinningPossibility(){
+	i=0
+
+	while [ $i -lt $GRID_LENGTH ]
+   do
+		if [[ "${board[$i]}" == "$letterX" ]] || [[ "${board[$i]}" == "$letterO" ]]
+      then
+			board[$i]=$i
+			presentPlayer=$OPTION_VALUE0
+			break
+		else
+      	board[$i]=$symbol
+         WinGame=$(checkWin)
+		fi
+		if [[ $WinGame == 1 ]]
+		then
+			presentPlayer=$OPTION_VLAUE1
+			WinGame=0
+			board[$i]=$i
+			echo >&2 "Selected : $i"
+			break
+		fi
+
+      i=$(( i + 1 ))
+	done
+	echo $i
+}
+
+
 #function to determine action during computers turn
 function computerTurn(){
+	WinGame=0
 	symbol=$1
-	position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
 
-	while [ "${board[$position]}" == "$letterX" ] || [ "${board[$position]}" == "$letterO" ]
-	do
+		position=$(checkWinningPossibility)
+	if [ $presentPlayer -eq $OPTION_VALUE0 ]
+	then
 		position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
-	done
 
-	board[$position]=$symbol	
+		while [ "${board[$position]}" == "$letterX" ] || [ "${board[$position]}" == "$letterO" ]
+		do
+			position=$(( $(( $RANDOM % $GRID_LENGTH )) ))
+		done
+	fi
+
+	board[$position]=$symbol
 	echo "Computer selects:" $position
 }
 
